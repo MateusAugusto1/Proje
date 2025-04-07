@@ -1,4 +1,3 @@
-// VehicleRoutes.tsx
 import React, { useState, useEffect } from 'react';
 import {
   Box,
@@ -20,13 +19,14 @@ import { MapContainer, TileLayer, Marker, Popup, Polyline } from 'react-leaflet'
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 
-// Importa os arquivos JSON
+
 import equipmentData from './equipment.json';
 import equipmentPositionHistoryData from './equipmentPositionHistory.json';
 import equipmentStateData from './equipmentState.json';
 import equipmentStateHistoryData from './equipmentStateHistory.json';
 
-// Interfaces conforme os JSONs
+
+
 interface Equipment {
   id: string;
   equipmentModelId: string;
@@ -55,17 +55,17 @@ interface EquipmentStateHistory {
   states: { date: string; equipmentStateId: string }[];
 }
 
-// Interface para representar a rota de um veículo
+
 interface EquipmentRoute {
   equipment: Equipment;
   positions: PositionRecord[];
 }
 
-// Função auxiliar para ordenar as posições por data
+
 const sortPositionsByDate = (positions: PositionRecord[]): PositionRecord[] =>
   [...positions].sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
 
-// Função para obter o estado atual (mais recente) de um equipamento
+
 const getLatestStateInfo = (equipmentId: string): { stateName: string; color: string } => {
   const stateHistories = equipmentStateHistoryData as EquipmentStateHistory[];
   const states = equipmentStateData as EquipmentState[];
@@ -77,7 +77,7 @@ const getLatestStateInfo = (equipmentId: string): { stateName: string; color: st
   return stateObj ? { stateName: stateObj.name, color: stateObj.color } : { stateName: 'Desconhecido', color: 'gray' };
 };
 
-// Função que cria um ícone customizado com cor interna e borda (a borda aqui fica fixa em branco)
+
 const createCustomIcon = (innerColor: string, borderColor: string = 'white') =>
   L.divIcon({
     className: 'custom-div-icon',
@@ -87,25 +87,17 @@ const createCustomIcon = (innerColor: string, borderColor: string = 'white') =>
     popupAnchor: [0, -12],
   });
 
-// Ícone padrão do Leaflet para os marcadores
-const markerIcon = L.icon({
-  iconUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-icon.png',
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-  shadowUrl: 'https://unpkg.com/leaflet@1.7.1/dist/images/marker-shadow.png',
-  shadowSize: [41, 41]
-});
+
 
 const VehicleRoutes: React.FC = () => {
-  // Lista de todos os veículos com histórico de posições
+
   const [routes, setRoutes] = useState<EquipmentRoute[]>([]);
-  // Veículo selecionado (para exibir sua rota)
+
   const [selectedRoute, setSelectedRoute] = useState<EquipmentRoute | null>(null);
-  // Controle se a rota do veículo selecionado está visível
+ 
   const [showRoute, setShowRoute] = useState(false);
 
-  // Carrega os dados e combina equipamentos com seus históricos de posição
+ 
   useEffect(() => {
     const equipments = equipmentData as Equipment[];
     const posHistories = equipmentPositionHistoryData as EquipmentPositionHistory[];
@@ -122,25 +114,25 @@ const VehicleRoutes: React.FC = () => {
 
   const handleSelect = (route: EquipmentRoute) => {
     setSelectedRoute(route);
-    setShowRoute(false); // Ao selecionar, oculta a rota inicialmente
+    setShowRoute(false); 
   };
 
   const toggleRoute = () => {
     setShowRoute(prev => !prev);
   };
 
-  // Define o centro do mapa: se um veículo estiver selecionado e tiver posições, usa a primeira posição; caso contrário, um valor padrão
+  
   const mapCenter: [number, number] =
     selectedRoute && selectedRoute.positions.length > 0
       ? [selectedRoute.positions[0].lat, selectedRoute.positions[0].lon]
       : [-19.1, -46.0];
 
-  // Legenda: usaremos os dados de equipmentStateData para construir uma tabela que mostra as cores
+  
   const equipmentStates = equipmentStateData as EquipmentState[];
 
   return (
     <Box sx={{ display: 'flex', height: '100vh' }}>
-      {/* Painel lateral: lista de veículos e legenda */}
+      {}
       <Box sx={{ width: '30%', p: 2, borderRight: '1px solid #ddd', overflowY: 'auto' }}>
         <Typography variant="h5" gutterBottom>
           Veículos
@@ -193,14 +185,14 @@ const VehicleRoutes: React.FC = () => {
         </Box>
       </Box>
 
-      {/* Área do mapa */}
+      {}
       <Box sx={{ flexGrow: 1 }}>
         <MapContainer center={mapCenter} zoom={13} style={{ height: '100%', width: '100%' }}>
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
-          {/* Se um veículo estiver selecionado e a rota estiver para ser mostrada */}
+          {}
           {selectedRoute && showRoute && selectedRoute.positions.length > 0 && (
             <>
               <Polyline
